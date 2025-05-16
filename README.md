@@ -40,7 +40,8 @@ Contribution: Group 7
 | `yfinance`  | Download historical data from Yahoo Finance |
 | `matplotlib`| Data visualization                     |
 | `pandas`    | Lightweight data manipulation          |
-
+| `Sckit-Learn` | Machine Learning library |
+| `Tensorflow` | Machine Learning library |
 ---
 
 ## IV. Comprehensive Technical and Statistical Analysis of AAPL Stock
