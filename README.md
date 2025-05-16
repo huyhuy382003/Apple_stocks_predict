@@ -14,7 +14,7 @@ This project focuses on the collection, processing, and analysis of Apple Inc. (
 - ✅ Collect historical stock price data for AAPL from Yahoo Finance.
 - ✅ Process the data using PySpark to ensure scalability and efficiency.
 - ✅ Calculate and visualize basic technical indicators (e.g., moving averages).
-- ⏳ (To be added) Develop predictive models for stock price forecasting.
+- ✅ Develop predictive models for stock price forecasting (LSTM, Gradient Boost Tree Regressor)
 
 ---
 
@@ -119,25 +119,27 @@ Insights from the chart:
   -Golden Cross (MA50 crossing above MA200) may indicate bullish momentum.
   - Death Cross (MA50 falling below MA200) may signal bearish momentum.
   - These crossover patterns are widely used in technical analysis to identify trend shifts.
-### 📈 30-Day Simple Moving Average (MA30)
+
+#### 6. Price vs. MA30 Chart
+📈 30-Day Simple Moving Average (MA30)
 The 30-day Simple Moving Average (SMA) is a fundamental trend-following indicator in technical analysis. It reflects the average closing price of the stock over the past 30 trading days. This smoothing technique helps eliminate short-term volatility and highlights the underlying trend.
 In this analysis, MA30 is calculated using a rolling window method. The indicator is then visualized alongside the actual closing prices to show how the market behaves in relation to its recent average.
 Insight:
 When the closing price crosses above the MA30 line, it may suggest an upward momentum. Conversely, when it drops below, it could indicate a bearish trend.
-### 📊 14-Day Relative Strength Index (RSI14)
-The Relative Strength Index (RSI) is a momentum oscillator used to evaluate whether a stock is overbought or oversold based on recent price changes. In this project, a 14-day RSI is calculated.
-  - RSI > 70 typically signals that the stock may be overbought.
-  - RSI < 30 indicates a potential oversold condition.
-The RSI is derived by averaging recent gains and losses over a 14-day window and applying the RSI formula. It provides a normalized value between 0 and 100 that helps investors assess market sentiment and potential reversal points.
-### 📉 Visualization of Indicators
-Two key charts are generated to support the analysis:
-#### 1.Price vs. MA30 Chart
+
 ![Image](https://github.com/user-attachments/assets/e4085327-e9ea-477e-9b46-4e0ffd928f9c)
 Displays the closing price of AAPL stock over time with the 30-day moving average (MA30).
   - MA30 smooths short-term fluctuations and highlights trends.
   - Price above MA30 → uptrend; price below MA30 → possible downtrend.
   - Useful for identifying trend direction and potential entry/exit points.
-#### 2.RSI Chart
+
+#### 7. RSI14 Chart
+📊 14-Day Relative Strength Index (RSI14)
+The Relative Strength Index (RSI) is a momentum oscillator used to evaluate whether a stock is overbought or oversold based on recent price changes. In this project, a 14-day RSI is calculated.
+  - RSI > 70 typically signals that the stock may be overbought.
+  - RSI < 30 indicates a potential oversold condition.
+The RSI is derived by averaging recent gains and losses over a 14-day window and applying the RSI formula. It provides a normalized value between 0 and 100 that helps investors assess market sentiment and potential reversal points.
+
 ![Image](https://github.com/user-attachments/assets/711dead9-dcac-42a2-bfe0-01e9da7d9936)
 Shows the 14-day Relative Strength Index (RSI), a momentum indicator.
   - RSI > 70 → overbought zone, potential price correction.
@@ -174,9 +176,30 @@ Shows the 14-day Relative Strength Index (RSI), a momentum indicator.
 - The closing prices were inverse-transformed after training to recover predictions in original scale, allowing for meaningful comparison with actual prices.
 - This approach leverages historical price patterns to forecast future closing prices, aiding investment decision-making.
 
+--- 
+
+## VII. Test Data Preparation for LSTM Model
+To evaluate the performance of the trained model, the testing dataset is prepared by creating sequences of historical data using a sliding window approach with a window size of 100 days. Specifically:
+  - Input sequences (x_test) are constructed by taking consecutive 100-day segments from the scaled test data.
+  - Corresponding target values (y_test) represent the actual closing price on the day immediately following each 100-day input sequence.
+  - Both x_test and y_test are then converted to NumPy arrays to be compatible with the model's expected input format.
+This setup allows the model to predict future stock prices based on the previous 100 days of data and facilitates the evaluation of model accuracy on unseen data.
+
 ---
 
-## VII. Defining the final dataset for testing by including last 100 coloums of the Model Training with GBTRegressor 
+## VIII. Making prediction and plotting the graph of predicted vs actual values: LSTM Model
+- In this step, the trained model is used to predict the closing stock prices based on the prepared test dataset. The predicted values are stored in the variable y_pred, which contains the forecasted prices corresponding to each day in the test set.
+- Both the predicted values (y_pred) and the actual values (y_test) are then inverse transformed by multiplying with a scaling factor. This step restores the data back to the original price scale (in USD), allowing direct comparison between predicted and true prices.
+
+![Image](https://github.com/user-attachments/assets/26b33557-f90d-4074-abba-f8d2a22199e2)
+
+- Finally, the actual and predicted prices are plotted over time. On the plot:
+  - The blue line represents the actual closing prices.
+  - The red line shows the predicted prices generated by the model.
+This visualization helps to intuitively assess the model’s performance in capturing the trend and fluctuations of the stock price over time. Close alignment between the two lines indicates good predictive accuracy, while significant deviations may point to prediction errors or unusual market volatility.
+
+---
+## IX. Defining the final dataset for testing by including last 100 coloums of the Model Training with GBTRegressor 
 We keep just the six core columns. ("Date","Open","High","Low","Close","Volume")
 yfinance pulls historical OHLC+Volume for AAPL from Jan 1, 2020 to Jan 1, 2025.
 
@@ -211,28 +234,37 @@ and finally Rolls forward to predict the next 100 days using actual daily inputs
 
 Evaluates and visualizes performance vs. real market data.
 
---- 
-
-## VIII. Test Data Preparation for LSTM Model
-To evaluate the performance of the trained model, the testing dataset is prepared by creating sequences of historical data using a sliding window approach with a window size of 100 days. Specifically:
-  - Input sequences (x_test) are constructed by taking consecutive 100-day segments from the scaled test data.
-  - Corresponding target values (y_test) represent the actual closing price on the day immediately following each 100-day input sequence.
-  - Both x_test and y_test are then converted to NumPy arrays to be compatible with the model's expected input format.
-This setup allows the model to predict future stock prices based on the previous 100 days of data and facilitates the evaluation of model accuracy on unseen data.
-
 ---
 
-## IX. Making prediction and plotting the graph of predicted vs actual values
-- In this step, the trained model is used to predict the closing stock prices based on the prepared test dataset. The predicted values are stored in the variable y_pred, which contains the forecasted prices corresponding to each day in the test set.
-- Both the predicted values (y_pred) and the actual values (y_test) are then inverse transformed by multiplying with a scaling factor. This step restores the data back to the original price scale (in USD), allowing direct comparison between predicted and true prices.
+## X. Model evaluation: Gradient-Boost Tree Regressor
 
-![Image](https://github.com/user-attachments/assets/26b33557-f90d-4074-abba-f8d2a22199e2)
+![image](https://github.com/user-attachments/assets/2bd6b725-e7de-4698-b03d-26dd3dcd3809)
 
-- Finally, the actual and predicted prices are plotted over time. On the plot:
-  - The blue line represents the actual closing prices.
-  - The red line shows the predicted prices generated by the model.
-This visualization helps to intuitively assess the model’s performance in capturing the trend and fluctuations of the stock price over time. Close alignment between the two lines indicates good predictive accuracy, while significant deviations may point to prediction errors or unusual market volatility.
+✅ General Observations:
+- The predicted line (orange, dashed) closely follows the actual line (blue) for most of the 100-day window.
+- The model seems to capture trend directionality well, especially during moderate price movements.
 
----
+⚠️ Notable Divergences:
+- Late March to mid-April 2025 shows a sharp drop in actual prices (from ~$220 to ~$170) that the model partially misses — the predicted prices are less volatile, underestimating both the depth of the dip and the magnitude of the rebound.
+- This suggests the model might be:
+  - Over-smoothed or conservative in high-volatility regimes.
+  - Not responsive enough to sudden shocks (e.g., earnings, news).
 
-## X. Model evaluation
+📊 Statistical Metrics:
+- RMSE (Root Mean Squared Error) = 7.3024
+  - Penalizes larger errors more than MAE.
+  - A value of 7.3 USD indicates on average, predictions deviate by about 3–4% in a price range of $170–$250.
+  - This is quite reasonable for stock prediction, where high volatility is the norm.
+
+- MAE (Mean Absolute Error) = 5.4684
+  - Less sensitive to outliers than RMSE.
+  - Indicates a consistent deviation of ~$5.47, suggesting solid average-case accuracy.
+  - Acceptable in financial time series with sharp fluctuations.
+ 
+- R² (R-squared) = 0.8219
+  - Explains 82.2% of the variance in the actual closing price.
+  - This is a strong result for stock prediction — even models with R² in the 0.7–0.8 range are often considered robust for financial applications.
+
+=> Brief Summary:
+- ✔️ The model provides a solid foundation, performs well by industry standards and can capture trend directionality pretty well.
+- ❗ However, it may benefit from further tuning or applying more effective method/model , especially for volatile conditions and event-driven dips or rallies.
