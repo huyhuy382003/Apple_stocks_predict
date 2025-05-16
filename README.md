@@ -7,13 +7,26 @@
 The stock market plays a critical role in the global economy. Predicting stock prices is a valuable tool that supports investors in making informed decisions and helps institutions manage financial risks effectively.
 This project focuses on the collection, processing, and analysis of Apple Inc. (AAPL) stock price data from 2015 to the present using PySpark for scalable data processing. The goal is to clean and prepare the data, compute key technical indicators, and visualize price trends as a foundation for future modeling and prediction.
 
+Contribution: Group 7
+
+| Participant  | Contribution |
+|-------------|--------------------|
+| Luong Quang Huy | 100% |
+| Hoang Nguyen Bao | 100%  |
+| Nguyen Duc Chien | 100% |
+| Hoang Duy Tung | 100% |
+| Trinh Duy Kien | 100% |
+| Ngo Tuan Anh | 100% |
+| Dang Danh Hao | 100% |
+| Bui Tuan Anh | 100% |
+
 ---
 
 ## II. Project Objectives
 
 - ✅ Collect historical stock price data for AAPL from Yahoo Finance.
 - ✅ Process the data using PySpark to ensure scalability and efficiency.
-- ✅ Calculate and visualize basic technical indicators (e.g., moving averages).
+- ✅ Calculate and visualize basic technical indicators (e.g., Moving Averages).
 - ✅ Develop predictive models for stock price forecasting (LSTM, Gradient Boost Tree Regressor)
 
 ---
