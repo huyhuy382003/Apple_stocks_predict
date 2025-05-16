@@ -95,7 +95,37 @@ Shows the 14-day Relative Strength Index (RSI), a momentum indicator.
 
 ---
 
-## 5. Defining the final dataset for testing by including last 100 coloums of the training dataset to get the prediction from the 1st column of the testing dataset.
+## 5. Defining the final dataset for testing by including last 100 coloums of the Model Training with GBTRegressor 
+We keep just the six core columns. ("Date","Open","High","Low","Close","Volume")
+yfinance pulls historical OHLC+Volume for AAPL from Jan 1, 2020 to Jan 1, 2025.
 
+then we Reads the CSV into a Spark DataFrame.
 
+We create three derived features for each day 
+𝑡
+:
 
+  PrevClose: yesterday’s Close (lag 1).
+
+  MA5: 5-day moving average of Close.
+
+  MA10: 10-day moving average of Close.
+
+Dropping nulls removes the first 10 rows where these can’t be computed.
+
+VectorAssembler packs all seven numeric inputs into a single features vector column.
+
+GBTRegressor builds 100 decision-tree boosters (maxIter=100), each up to depth 5.
+
+We chain them in a Pipeline for convenience (assembler → gbt) and train on the full engineered DataFrame.
+
+Why GBTRegressor?
+Gradient Boosting builds an ensemble of weak learners (small trees) sequentially, each one correcting its predecessor’s errors.
+
+It often outperforms single-tree models and can naturally handle nonlinear interactions between features (e.g. how Volume and MA5 jointly influence tomorrow’s price).
+
+The hyperparameters (maxIter, maxDepth) control complexity vs. overfitting.
+
+and finally Rolls forward to predict the next 100 days using actual daily inputs,
+
+Evaluates and visualizes performance vs. real market data.
